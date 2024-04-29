@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOGIN/SIGNUP</title>
+<link rel="stylesheet" href="/codes/subjectmatch.css">
+<style>
+    #login{
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1 id="login">SUBJECT MATCH</h1>
+    <p>Fill out the form below to find a personalized tutor for your preferred subjects based on your academic performance.</p>
+    <form id="subjectForm">
+        <div class="form-group">
+            <label id="name" for="name">Name:</label>
+            <input type="text" id="name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+            <label for="subjects">Preferred Subjects:</label>
+            <select id="subjects" multiple>
+                <option value="OOP">OOP</option>
+                <option value="DSA">DSA</option>
+                <option value="LDCO">LDCO</option>
+                <option value="MECHANICS">MECHANICS</option>
+                <option value="GRAPHICS">GRAPHICS</option>
+                <option value="SE">SE</option>
+                <option value="M1">M1</option>
+                <option value="BCN">BCN</option>
+                <option value="MICROPROCESSOR">MICROPROCESSOR</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="performance">Academic Performance:</label>
+            <input type="number" id="performance" min="0" max="100" required>
+        </div>
+        <button type="submit">Find Tutor</button>
+    </form>
+    <div id="result" style="display: none;">
+        <h2>Matching Tutors:</h2>
+        <div id="tutorList"></div>
+        <button id="scheduleButton" style="display: none;">Schedule Class</button>
+    </div>
+</div>
+<script>
+    
+    // Sample data of teachers for each subject
+    const teachers = {
+        OOP: [
+            { name: "Teacher 1", rank: 1 },
+            { name: "Teacher 2", rank: 2 },
+            { name: "Teacher 3", rank: 3 },
+            { name: "Teacher 4", rank: 4 }
+        ],
+        DSA: [
+            { name: "Govind suryavanshi", rank: 1 },
+            { name: "Hemlata Gaikwad", rank: 2 },
+            { name: "teacher", rank: 3 },
+            { name: "Teacher 8", rank: 4 }
+        ],
+        LDCO: [
+            { name: "Teacher 9", rank: 1 },
+            { name: "Teacher 10", rank: 2 },
+            { name: "Teacher 11", rank: 3 },
+            { name: "Teacher 12", rank: 4 }
+        ],
+        MECHANICS: [
+            { name: "DR. Samir Savarkar ", rank: 1 },
+            { name: "Akashay Rahane", rank: 2 },
+            { name: "Amar Shitole", rank: 3 },
+            { name: "Teacher 16", rank: 4 }
+        ],
+        GRAPHICS: [
+            { name: "Bawane sir", rank: 1 },
+            { name: "Rupali patil", rank: 2 },
+            { name: "Teacher 19", rank: 3 },
+            { name: "Teacher 20", rank: 4 }
+        ],
+        SE: [
+            { name: "Teacher 21", rank: 1 },
+            { name: "Teacher 22", rank: 2 },
+            { name: "Teacher 23", rank: 3 },
+            { name: "Teacher 24", rank: 4 }
+        ],
+        M1: [
+            { name: "Nilesh Thube", rank: 1 },
+            { name: "Manisha Deshpande", rank: 2 },
+            { name: "Shital Patil", rank: 3 },
+            { name: "teacher", rank: 4 }
+        ],
+        BCN: [
+            { name: "Teacher 29", rank: 1 },
+            { name: "Teacher 30", rank: 2 },
+            { name: "Teacher 31", rank: 3 },
+            { name: "Teacher 32", rank: 4 }
+        ],
+        MICROPROCESSOR: [
+            { name: "Teacher 33", rank: 1 },
+            { name: "Teacher 34", rank: 2 },
+            { name: "Teacher 35", rank: 3 },
+            { name: "Teacher 36", rank: 4 }
+        ]
+    };
+
+    document.getElementById('subjectForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const subjects = Array.from(document.getElementById('subjects').selectedOptions).map(option => option.value);
+        const performance = parseInt(document.getElementById('performance').value);
+
+        // Matching logic
+        const tutorList = document.getElementById('tutorList');
+        tutorList.innerHTML = '';
+        subjects.forEach(subject => {
+            const teachersForSubject = teachers[subject];
+            const sortedTeachers = teachersForSubject.sort((a, b) => a.rank - b.rank);
+            sortedTeachers.forEach(teacher => {
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'selectedTeacher';
+                radio.value = teacher.name;
+                radio.id = teacher.name;
+
+                const label = document.createElement('label');
+                label.textContent = `${teacher.name} (Rank: ${teacher.rank})`;
+                label.htmlFor = teacher.name;
+
+                tutorList.appendChild(radio);
+                tutorList.appendChild(label);
+                tutorList.appendChild(document.createElement('br'));
+            });
+        });
+
+        // Show matched results
+        document.getElementById('result').style.display = 'block';
+        document.getElementById('scheduleButton').style.display = 'none';
+    });
+
+    // Event listener for enabling schedule button
+    document.getElementById('tutorList').addEventListener('change', function() {
+        document.getElementById('scheduleButton').style.display = 'block';
+    });
+
+    // Event listener for scheduling class
+    document.getElementById('scheduleButton').addEventListener('click', function() {
+        const selectedTeacher = document.querySelector('input[name="selectedTeacher"]:checked');
+        if (selectedTeacher) {
+            const selectedTeacherName = selectedTeacher.value;
+            const a = name;
+            alert(`Your Class successfully scheduled with ${selectedTeacherName}`);
+            // You can implement further logic here, such as submitting the form data to a server
+        } else {
+            alert('Please select a teacher.');
+        }
+    });
+</script>
+</body>
+</html>
